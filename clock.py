@@ -147,6 +147,11 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
         )
 
 
+def get_color_from_bar(loc: float, cmap_name: str = "Set1"):
+    cmap = plt.get_cmap(cmap_name)
+    return cmap(np.clip(loc, 0.0, 1.0))
+
+
 # Create figure
 fig = plt.figure(figsize=(14, 7), facecolor="linen")
 
@@ -157,7 +162,8 @@ create_clock(
     5,
     19,
     highlights=[
-        ("Middle school", 11, 17, "limegreen"),
+        ("Middle school", 11, 17, get_color_from_bar(0.1)),
+        ("Undergraduate", 17, 19, get_color_from_bar(0.3)),
     ],
 )
 ax1.set_title(
@@ -170,7 +176,11 @@ create_clock(
     ax2,
     19,
     72,
-    highlights=[("Master's", 21, 24, "dodgerblue"), ("PhD", 24, 28, "limegreen")],
+    highlights=[
+        ("Undergraduate", 19, 21, get_color_from_bar(0.3)),
+        ("Master's", 21, 24, get_color_from_bar(0.5)),
+        ("PhD", 24, 28, get_color_from_bar(0.7)),
+    ],
     current_age=26,
 )
 ax2.set_title(
