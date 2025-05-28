@@ -47,14 +47,13 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
         text_angle = np.degrees(angle) % 360
         ax.text(angle, 1.15, f'{int(age)}',
                 ha='center', va='center',
-                rotation=text_angle-90 if text_angle > 90 else text_angle+270,
                 fontsize=12, fontweight='bold', color='darkgreen')
 
     # Add highlighted ranges
     if highlights:
         for label, start, end, color in highlights:
-            start_angle = -((start - start_age)/total_years) * 2*np.pi + np.pi/2
-            end_angle = -((end - start_age)/total_years) * 2*np.pi + np.pi/2
+            start_angle = ((start - start_age)/total_years) * 2*np.pi
+            end_angle = ((end - start_age)/total_years) * 2*np.pi
             ax.barh(1, width=end_angle - start_angle, left=start_angle,
                     color=color, alpha=0.4, height=0.3, zorder=2)
 
@@ -67,7 +66,7 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
     # Current age indicator
     if current_age:
         age_frac = np.log(current_age/start_age)/np.log(end_age/start_age)
-        arrow_angle = -age_frac * 2*np.pi + np.pi/2
+        arrow_angle = age_frac * 2*np.pi
         ax.add_patch(FancyArrow(arrow_angle, 1.1, 0, -0.3,
                     width=0.02, color='crimson', zorder=10,
                     head_width=0.15, head_length=0.1))
