@@ -2,6 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Arc, FancyArrow
 
+
+def get_percentage_on_log_interval(current, *, start, end):
+    """Calculate position fraction on logarithmic scale"""
+    return np.log(current/start) / np.log(end/start)
+
+
 def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
     """Create a styled clock with age progression"""
     # Set up polar plot
