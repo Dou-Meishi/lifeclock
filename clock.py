@@ -46,21 +46,39 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
     # 3. Center hub
     ax.plot(0, 0, "o", markersize=10, color="black", zorder=5)
 
-    # 4. Clock hands (static position)
-    ax.quiver(
-        0, 0, 0, 1, color="black", scale_units="xy", scale=1, width=0.01, zorder=6
-    )
-    ax.quiver(
-        0,
-        0,
-        np.pi / 6,
-        0.7,
-        color="darkred",
-        scale_units="xy",
-        scale=1,
-        width=0.008,
-        zorder=5,
-    )
+    # 4. Clock hands
+    if current_age:
+        current_clock = (
+            get_percentage_on_log_interval(
+                current=current_age, start=start_age, end=end_age
+            )
+            * 12
+        )
+        hour_hand = 360 * current_clock / 12
+        minute_hand = 360 * (current_clock % 1.0)
+
+        ax.quiver(
+            0,
+            0,
+            minute_hand,
+            1,
+            color="black",
+            scale_units="xy",
+            scale=1,
+            width=0.01,
+            zorder=6,
+        )
+        ax.quiver(
+            0,
+            0,
+            hour_hand,
+            0.7,
+            color="darkred",
+            scale_units="xy",
+            scale=1,
+            width=0.008,
+            zorder=5,
+        )
 
     # the zero clock corresponds to the end age
     ax.text(
@@ -127,24 +145,6 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
                 bbox=dict(facecolor="white", alpha=0.8, edgecolor="none"),
             )
 
-    # Current age indicator
-    if current_age:
-        age_frac = np.log(current_age / start_age) / np.log(end_age / start_age)
-        arrow_angle = age_frac * 2 * np.pi
-        ax.add_patch(
-            FancyArrow(
-                arrow_angle,
-                1.1,
-                0,
-                -0.3,
-                width=0.02,
-                color="crimson",
-                zorder=10,
-                head_width=0.15,
-                head_length=0.1,
-            )
-        )
-
 
 # Create figure
 fig = plt.figure(figsize=(14, 7), facecolor="linen")
@@ -170,6 +170,7 @@ create_clock(
     19,
     72,
     highlights=[("Master's", 21, 24, "dodgerblue"), ("PhD", 24, 28, "limegreen")],
+    current_age=26,
 )
 ax2.set_title(
     "Adulthood to Senior\n(19-72 Years)", fontsize=14, pad=30, color="darkred"
