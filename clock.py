@@ -42,9 +42,12 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
     ax.quiver(0, 0, 0, 1, color='black', scale_units='xy', scale=1, width=0.01, zorder=6)
     ax.quiver(0, 0, np.pi/6, 0.7, color='darkred', scale_units='xy', scale=1, width=0.008, zorder=5)
 
+    # the zero clock corresponds to the end age
+    ax.text(0, 1.15, f'{int(end_age)}',
+            ha='center', va='center',
+            fontsize=12, fontweight='bold', color='darkgreen')
     # Add age labels
-    for angle, age in zip(angles, ages):
-        text_angle = np.degrees(angle) % 360
+    for angle, age in zip(angles[1:], ages[1:]):
         ax.text(angle, 1.15, f'{int(age)}',
                 ha='center', va='center',
                 fontsize=12, fontweight='bold', color='darkgreen')
