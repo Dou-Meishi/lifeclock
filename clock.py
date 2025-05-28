@@ -200,3 +200,7 @@ fig.text(
 
 plt.tight_layout(pad=4)
 plt.show()
+
+output_path = "./My_life_clock.svg" 
+fig.savefig(output_path)
+print(output_path)
