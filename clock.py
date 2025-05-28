@@ -8,6 +8,11 @@ def get_percentage_on_log_interval(current, *, start, end):
     return np.log(current / start) / np.log(end / start)
 
 
+def get_num_from_percentage_on_log_interval(per, *, start, end):
+    """The inverse of get_percentage_on_log_interval."""
+    return np.exp(per * np.log(end / start) + np.log(start))
+
+
 def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
     """Create a styled clock with age progression"""
     # Set up polar plot
@@ -22,10 +27,13 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
     ax.spines["polar"].set_visible(False)
 
     # Calculate positions
-    total_years = end_age - start_age
-    hours = np.arange(12)
-    angles = np.linspace(0, 2 * np.pi, 12, endpoint=False)
-    ages = [start_age + (i * total_years / 12) for i in range(12)]
+    hours = np.arange(1, 13)  # ends at 12 o'clock
+    angles = hours / len(hours) * 2 * np.pi
+    ages = get_num_from_percentage_on_log_interval(
+        hours / len(hours),
+        start=start_age,
+        end=end_age,
+    )
 
     # Add clock decorations
     # 1. Outer bezel
@@ -80,9 +88,21 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
 
     # Add highlighted ranges
     if highlights:
-        for label, start, end, color in highlights:
-            start_angle = ((start - start_age) / total_years) * 2 * np.pi
-            end_angle = ((end - start_age) / total_years) * 2 * np.pi
+        for label, region_start, region_end, color in highlights:
+            start_angle = (
+                get_percentage_on_log_interval(
+                    current=region_start, start=start_age, end=end_age
+                )
+                * 2
+                * np.pi
+            )
+            end_angle = (
+                get_percentage_on_log_interval(
+                    current=region_end, start=start_age, end=end_age
+                )
+                * 2
+                * np.pi
+            )
             ax.barh(
                 1,
                 width=end_angle - start_angle,
