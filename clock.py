@@ -104,6 +104,7 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
 
     # Add highlighted ranges
     if highlights:
+        legend_handles, legend_labels = [], []
         for label, region_start, region_end, color in highlights:
             start_angle = (
                 get_percentage_on_log_interval(
@@ -129,19 +130,21 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
                 zorder=2,
             )
 
-            # Add annotation
-            mid_angle = (start_angle + end_angle) / 2
-            ax.text(
-                mid_angle,
-                0.7,
-                label,
-                rotation=np.degrees(-mid_angle) - 90,
-                ha="center",
-                va="center",
-                color=color,
-                fontsize=12,
-                bbox=dict(facecolor="white", alpha=0.8, edgecolor="none"),
+            legend_handles.append(
+                plt.Rectangle((0, 0), 1, 1, facecolor=color, alpha=0.4)
             )
+            legend_labels.append(label)
+
+        # Add legend outside the plot
+        ax.legend(
+            legend_handles,
+            legend_labels,
+            loc="upper left",
+            bbox_to_anchor=(1.05, 1),
+            title="Life Stages",
+            frameon=False,
+            fontsize=12,
+        )
 
 
 # Create figure
