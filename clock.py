@@ -37,7 +37,7 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
 
     # Add clock decorations
     # 1. Outer bezel
-    ax.plot(angles, [1.1] * 12, color="darkgoldenrod", lw=2, zorder=3)
+    ax.plot([0] + list(angles), [1.1] * 13, color="darkgoldenrod", lw=2, zorder=3)
 
     # 2. Hour markers
     for angle, hour in zip(angles, hours):
@@ -81,8 +81,8 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
     # the zero clock corresponds to the end age
     ax.text(
         0,
-        1.15,
-        f"{int(end_age)}",
+        1.20,
+        f"{int(end_age):2d} | {int(start_age):2d}",
         ha="center",
         va="center",
         fontsize=12,
@@ -90,11 +90,11 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
         color="darkgreen",
     )
     # Add age labels
-    for angle, age in zip(angles[1:], ages[1:]):
+    for angle, age in zip(angles[:-1], ages[:-1]):
         ax.text(
             angle,
-            1.15,
-            f"{int(age)}",
+            1.20,
+            f"{float(age):.1f}",
             ha="center",
             va="center",
             fontsize=12,
