@@ -48,22 +48,20 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
 
     # 4. Clock hands
     if current_age:
-        current_clock = (
-            get_percentage_on_log_interval(
-                current=current_age, start=start_age, end=end_age
-            )
-            * 12
+        per = get_percentage_on_log_interval(
+            current=current_age, start=start_age, end=end_age
         )
-        hour_hand = 360 * current_clock / 12
-        minute_hand = 360 * (current_clock % 1.0)
+        hour_hand = 2 * np.pi * per
+        minute_hand = 2 * np.pi * ((per * 12) % 1.0)
+        print(per, hour_hand, minute_hand)
 
         ax.quiver(
             0,
             0,
-            minute_hand,
-            1,
+            0.35 * np.cos(-minute_hand + np.pi / 2),
+            0.35 * np.sin(-minute_hand + np.pi / 2),
             color="black",
-            scale_units="xy",
+            #            scale_units="xy",
             scale=1,
             width=0.01,
             zorder=6,
@@ -71,10 +69,10 @@ def create_clock(ax, start_age, end_age, highlights=None, current_age=None):
         ax.quiver(
             0,
             0,
-            hour_hand,
-            0.7,
+            0.25 * np.cos(-hour_hand + np.pi / 2),
+            0.25 * np.sin(-hour_hand + np.pi / 2),
             color="darkred",
-            scale_units="xy",
+            #            scale_units="xy",
             scale=1,
             width=0.008,
             zorder=5,
